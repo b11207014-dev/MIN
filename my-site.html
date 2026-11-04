@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F7">
+  <title>個人網站｜開南資管・資料分析方向</title>
+  <meta name="description" content="開南大學資訊管理學系應屆畢業生，探索資料分析與商業智慧方向。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #F5F5F7;
+      --color-tile: #FFFFFF;
+      --color-text: #1D1D1F;
+      --color-muted: #6E6E73;
+      --color-accent: #0071E3;
+      --color-dark: #1D1D1F;
+      --font-latin: "Inter", sans-serif;
+      --font-chinese: "Noto Sans TC", sans-serif;
+      --radius-tile: 28px;
+      --shadow-tile: 0 1px 2px rgba(0,0,0,.04);
+      --grid-gap: 16px;
+      --content-width: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-latin), var(--font-chinese);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    .site-shell {
+      width: min(calc(100% - 32px), var(--content-width));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 0 4px;
+    }
+    .brand { font-weight: 800; letter-spacing: -.04em; }
+    .topbar-note { color: var(--color-muted); font-size: 14px; }
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--grid-gap);
+      grid-auto-flow: dense;
+    }
+    .tile {
+      min-width: 0;
+      background: var(--color-tile);
+      border-radius: var(--radius-tile);
+      box-shadow: var(--shadow-tile);
+      padding: clamp(22px, 3vw, 36px);
+      transition: transform .22s ease, box-shadow .22s ease;
+      overflow-wrap: anywhere;
+    }
+    .tile:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0,0,0,.06);
+      z-index: 1;
+    }
+    .hero { grid-column: span 8; min-height: 330px; display: flex; flex-direction: column; justify-content: space-between; }
+    .photo { grid-column: span 4; grid-row: span 2; min-height: 440px; display: flex; flex-direction: column; justify-content: space-between; background: #E9E9ED; }
+    .about { grid-column: span 8; }
+    .job { grid-column: span 4; }
+    .works { grid-column: span 8; }
+    .skills { grid-column: span 4; }
+    .experience { grid-column: span 8; }
+    .traits { grid-column: span 4; }
+    .interests { grid-column: span 4; }
+    .contact { grid-column: span 8; }
+    .dark { background: var(--color-dark); color: #FFFFFF; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--color-muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .dark .eyebrow { color: #A1A1A6; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 12px;
+      font-size: clamp(48px, 7vw, 76px);
+      line-height: 1.08;
+      letter-spacing: -.055em;
+      font-weight: 800;
+    }
+    h2 {
+      margin-bottom: 12px;
+      font-size: clamp(24px, 3vw, 32px);
+      line-height: 1.25;
+      letter-spacing: -.035em;
+    }
+    h3 { font-size: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 0; }
+    .lead { max-width: 660px; font-size: clamp(18px, 2vw, 22px); color: #424245; }
+    .dark .lead { color: #D2D2D7; }
+    .hero-footer { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 28px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: #F5F5F7;
+      color: #424245;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .dark .pill { background: #333336; color: #F5F5F7; }
+    .photo-frame {
+      display: grid;
+      place-items: center;
+      flex: 1;
+      min-height: 270px;
+      margin: 12px 0;
+      border-radius: 20px;
+      background: #DEDEE3;
+      color: #6E6E73;
+      text-align: center;
+      padding: 20px;
+    }
+    .photo-mark {
+      display: grid;
+      place-items: center;
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: #F5F5F7;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -.05em;
+    }
+    .placeholder { color: var(--color-muted); }
+    .dark .placeholder { color: #A1A1A6; }
+    .stat-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 20px; }
+    .stat {
+      background: #F5F5F7;
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .stat strong { display: block; font-size: 24px; line-height: 1.2; margin-bottom: 4px; }
+    .stat span { color: var(--color-muted); font-size: 14px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .tag {
+      display: inline-flex;
+      padding: 9px 13px;
+      border-radius: 14px;
+      background: #F5F5F7;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .dark .tag { background: #333336; }
+    .project-card {
+      padding: 18px;
+      background: #F5F5F7;
+      border-radius: 18px;
+      margin-top: 14px;
+    }
+    .project-card p { color: var(--color-muted); }
+    .wide-note { margin-top: 12px; color: var(--color-muted); font-size: 14px; }
+    .contact-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: var(--color-accent);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+    }
+    .button.secondary { background: #F5F5F7; color: var(--color-text); }
+    .footer { padding: 24px 4px 0; color: var(--color-muted); font-size: 14px; text-align: center; }
+    @media (max-width: 900px) {
+      .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero, .about, .works, .experience, .contact { grid-column: span 2; }
+      .photo, .job, .skills, .traits, .interests { grid-column: span 1; }
+      .photo { grid-row: span 2; }
+    }
+    @media (max-width: 500px) {
+      .site-shell { width: min(calc(100% - 24px), var(--content-width)); padding-top: 18px; }
+      .topbar { align-items: flex-start; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+      .bento { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+      .tile, .hero, .photo, .about, .job, .works, .skills, .experience, .traits, .interests, .contact {
+        grid-column: 1;
+        grid-row: auto;
+      }
+      .hero { min-height: 300px; }
+      .photo { min-height: 350px; }
+      .photo-frame { min-height: 220px; }
+      h1 { font-size: clamp(48px, 13vw, 64px); }
+      .tile { padding: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .tile { transition: none; }
+      .tile:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="site-shell">
+    <header class="topbar">
+      <div class="brand">PERSONAL / PORTFOLIO</div>
+      <div class="topbar-note">開南大學・資訊管理學系｜新鮮人</div>
+    </header>
+
+    <section class="bento" aria-label="個人網站內容">
+      <article class="tile hero">
+        <div>
+          <p class="eyebrow">Aspiring Data Analyst</p>
+          <h1>姓名<br><span class="placeholder">待確認</span></h1>
+          <p class="lead">開南資管應屆畢業生｜對資料分析與商業數據充滿興趣，期待從資料中發掘洞察。</p>
+        </div>
+        <div class="hero-footer">
+          <span class="pill">Data Analytics</span>
+          <span class="pill">Business Intelligence</span>
+          <span class="pill">Fresh Graduate</span>
+        </div>
+      </article>
+
+      <article class="tile photo">
+        <p class="eyebrow">Profile</p>
+        <div class="photo-frame">
+          <div>
+            <div class="photo-mark">?</div>
+            <strong>個人照片</strong>
+            <p>待確認｜可替換為你的照片</p>
+          </div>
+        </div>
+        <p class="placeholder">以真實照片建立專業且親切的第一印象。</p>
+      </article>
+
+      <article class="tile about">
+        <p class="eyebrow">About Me</p>
+        <h2>關於我</h2>
+        <p>我就讀於開南大學資訊管理學系，目前是應屆畢業生。對資料分析、數據研究與商業決策有興趣，希望結合資訊管理知識，透過資料整理、分析與視覺化，協助理解問題並提出有依據的觀察。</p>
+        <p class="wide-note">個人專長、學習歷程與具體故事：待確認。</p>
+      </article>
+
+      <article class="tile job">
+        <p class="eyebrow">Career Goal</p>
+        <h2>想找的工作</h2>
+        <h3>資料分析相關職位</h3>
+        <p class="placeholder">目標職位與產業待確認</p>
+        <div class="tag-list">
+          <span class="tag">Data Analyst</span>
+          <span class="tag">BI Analyst</span>
+          <span class="tag">營運分析</span>
+        </div>
+      </article>
+
+      <article class="tile works">
+        <p class="eyebrow">Selected Projects</p>
+        <h2>作品</h2>
+        <div class="project-card">
+          <h3>作品／專題名稱｜待確認</h3>
+          <p>專案背景、使用資料、分析方法、使用工具與成果：待確認。</p>
+        </div>
+        <div class="project-card">
+          <h3>第二項作品｜待確認</h3>
+          <p>可放置課堂專題、個人練習、資料視覺化或研究報告。</p>
+        </div>
+      </article>
+
+      <article class="tile skills">
+        <p class="eyebrow">Skills</p>
+        <h2>技能</h2>
+        <p class="placeholder">實際熟悉程度待確認</p>
+        <div class="tag-list">
+          <span class="tag">Excel｜待確認</span>
+          <span class="tag">SQL｜待確認</span>
+          <span class="tag">Python｜待確認</span>
+          <span class="tag">Power BI｜待確認</span>
+          <span class="tag">統計分析｜待確認</span>
+        </div>
+      </article>
+
+      <article class="tile experience">
+        <p class="eyebrow">Experience</p>
+        <h2>經歷</h2>
+        <div class="project-card">
+          <h3>學歷</h3>
+          <p><strong>開南大學｜資訊管理學系</strong></p>
+          <p>應屆畢業生｜畢業年份：待確認</p>
+        </div>
+        <div class="project-card">
+          <h3>實習／工作／社團</h3>
+          <p>經歷、職責、時間與具體成果：待確認。</p>
+        </div>
+      </article>
+
+      <article class="tile traits">
+        <p class="eyebrow">Strengths</p>
+        <h2>個人特質</h2>
+        <p class="placeholder">待確認</p>
+        <div class="tag-list">
+          <span class="tag">分析思維｜待確認</span>
+          <span class="tag">細心｜待確認</span>
+          <span class="tag">問題解決｜待確認</span>
+        </div>
+      </article>
+
+      <article class="tile interests">
+        <p class="eyebrow">Interests</p>
+        <h2>興趣</h2>
+        <p class="placeholder">待確認</p>
+        <p class="wide-note">可補充個人興趣、關注的數據議題或持續學習的領域。</p>
+      </article>
+
+      <article class="tile dark contact">
+        <p class="eyebrow">Let's Connect</p>
+        <h2>一起聊聊數據與機會。</h2>
+        <p class="lead">正在尋找資料分析相關的新鮮人機會。歡迎聯絡我，交流職涯與合作可能。</p>
+        <div class="contact-row">
+          <a class="button" href="mailto:待確認@example.com" aria-label="寄送電子郵件">聯絡我</a>
+          <a class="button secondary" href="#" aria-label="下載履歷（連結待補）" onclick="alert('履歷下載連結待確認，請先補上履歷檔案。'); return false;">履歷下載｜待補</a>
+        </div>
+        <p class="wide-note">Email／LinkedIn／GitHub：待確認</p>
+      </article>
+    </section>
+    <footer class="footer">© <span id="year">2026</span> 個人網站｜以資料探索更多可能</footer>
+  </main>
+</body>
+</html>

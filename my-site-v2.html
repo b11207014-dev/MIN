@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05060A">
+  <title>閔元泰｜開南資管・資料分析方向</title>
+  <meta name="description" content="閔元泰 — 開南大學資訊管理學系應屆畢業生，探索資料分析與商業智慧方向。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%234DA6FF'/%3E%3Cstop offset='1' stop-color='%23A78BFA'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%2305060A'/%3E%3Ccircle cx='32' cy='32' r='14' fill='none' stroke='url(%23g)' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='3' fill='url(%23g)'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05060A;
+      --tile: rgba(255, 255, 255, .045);
+      --tile-border: rgba(255, 255, 255, .09);
+      --text: #F5F6FA;
+      --muted: #9BA0B0;
+      --dim: #6B7180;
+      --accent: #4DA6FF;
+      --accent-2: #A78BFA;
+      --glow-cyan: rgba(77, 166, 255, .5);
+      --glow-violet: rgba(167, 139, 250, .45);
+      --radius: 26px;
+      --grid-gap: 14px;
+      --content-width: 1180px;
+      --font-latin: "Inter", sans-serif;
+      --font-chinese: "Noto Sans TC", sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-latin), var(--font-chinese);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    ::selection { background: rgba(77, 166, 255, .35); color: #FFFFFF; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #05060A; }
+    ::-webkit-scrollbar-thumb { background: #23262F; border-radius: 999px; border: 2px solid #05060A; }
+    ::-webkit-scrollbar-thumb:hover { background: #363B49; }
+
+    /* ── 頂部閱讀進度 ─────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .scroll-progress i {
+      display: block;
+      height: 100%;
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2) 60%, #38E0C8);
+      box-shadow: 0 0 12px var(--glow-cyan);
+    }
+
+    /* ── 背景動效 ─────────────────────────── */
+    .bg-stage {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .bg-grid {
+      position: absolute;
+      inset: -50%;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      transform: perspective(900px) rotateX(58deg) translateY(-12%);
+      mask-image: radial-gradient(ellipse 60% 55% at 50% 40%, black, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 40%, black, transparent 75%);
+      animation: gridflow 22s linear infinite;
+    }
+    @keyframes gridflow { to { background-position-y: 44px; } }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .55;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .orb-a { width: 560px; height: 560px; top: -180px; left: -140px; background: radial-gradient(circle, var(--glow-cyan), transparent 65%); }
+    .orb-b { width: 520px; height: 520px; top: 24%; right: -200px; background: radial-gradient(circle, var(--glow-violet), transparent 65%); animation-delay: -6s; }
+    .orb-c { width: 460px; height: 460px; bottom: -180px; left: 28%; background: radial-gradient(circle, rgba(56, 224, 200, .35), transparent 65%); animation-delay: -12s; }
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(70px, 50px) scale(1.12); }
+    }
+    .bg-noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .5;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── 版面 ─────────────────────────────── */
+    .site-shell {
+      width: min(calc(100% - 32px), var(--content-width));
+      margin: 0 auto;
+      padding: 36px 0 56px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+      padding: 0 6px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .14em;
+    }
+    .brand-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--glow-cyan);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse { 50% { opacity: .35; } }
+    .topbar-note {
+      color: var(--dim);
+      font-size: 13px;
+      font-family: var(--font-mono);
+      letter-spacing: .02em;
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--grid-gap);
+      grid-auto-flow: dense;
+    }
+
+    /* ── 技能跑馬燈 ───────────────────────── */
+    .marquee {
+      overflow: hidden;
+      margin: 0 0 var(--grid-gap);
+      padding: 11px 0;
+      border-top: 1px solid var(--tile-border);
+      border-bottom: 1px solid var(--tile-border);
+      mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 34s linear infinite;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .mq-chunk {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding-right: 24px;
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .mq-chunk b { color: var(--muted); font-weight: 600; }
+    .mq-chunk i {
+      font-style: normal;
+      font-size: 8px;
+      color: var(--accent);
+      opacity: .8;
+    }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    .tile {
+      min-width: 0;
+      position: relative;
+      background: var(--tile);
+      border: 1px solid var(--tile-border);
+      border-radius: var(--radius);
+      padding: clamp(22px, 3vw, 34px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow-wrap: anywhere;
+      transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px));
+      transition: transform .18s ease-out, border-color .25s ease, box-shadow .25s ease, background .25s ease;
+      opacity: 0;
+      translate: 0 22px;
+      will-change: transform;
+    }
+    .tile.in { animation: rise .7s cubic-bezier(.16,1,.3,1) forwards; }
+    @keyframes rise { to { opacity: 1; translate: 0 0; } }
+    .tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.07), transparent 55%);
+      opacity: 0;
+      transition: opacity .3s ease;
+      pointer-events: none;
+    }
+    .tile:hover::before { opacity: 1; }
+    .tile:not(.contact)::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(77,166,255,.85), rgba(167,139,250,.5) 45%, transparent 70%, rgba(56,224,200,.7));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity .3s ease;
+      pointer-events: none;
+    }
+    .tile:not(.contact):hover::after { opacity: 1; }
+    .tile:hover {
+      --ty: -4px;
+      border-color: rgba(255, 255, 255, .2);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+    }
+
+    .hero { grid-column: span 8; min-height: 340px; display: flex; flex-direction: column; justify-content: space-between; }
+    .photo { grid-column: span 4; grid-row: span 2; min-height: 450px; display: flex; flex-direction: column; }
+    .about { grid-column: span 8; }
+    .job { grid-column: span 4; }
+    .works { grid-column: span 8; }
+    .skills { grid-column: span 4; }
+    .experience { grid-column: span 8; }
+    .traits { grid-column: span 4; }
+    .interests { grid-column: span 4; }
+    .contact { grid-column: span 8; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 16px;
+      font-size: clamp(52px, 7vw, 84px);
+      line-height: 1.04;
+      letter-spacing: -.05em;
+      font-weight: 900;
+    }
+    h1 .gradient-text {
+      background: linear-gradient(92deg, var(--accent), var(--accent-2) 70%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    h1 .shine {
+      background: linear-gradient(100deg, #FFFFFF 18%, #A9CEFF 36%, #FFFFFF 48%, #C9B8FF 62%, #FFFFFF 82%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 7s linear infinite;
+    }
+    @keyframes shine { to { background-position: -220% 0; } }
+    .placeholder-name {
+      color: transparent;
+      background: linear-gradient(92deg, #3A3F4E, #55607A);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    h2 { margin-bottom: 12px; font-size: clamp(24px, 3vw, 31px); line-height: 1.25; letter-spacing: -.035em; font-weight: 800; }
+    h3 { font-size: 19px; margin-bottom: 8px; }
+    p { margin-bottom: 0; }
+    .lead { max-width: 640px; font-size: clamp(17px, 2vw, 21px); color: #C6CAD6; }
+    .placeholder { color: var(--dim); }
+    .muted { color: var(--muted); }
+
+    .hero-footer { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 5px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--tile-border);
+      background: rgba(255, 255, 255, .04);
+      color: #C6CAD6;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+    .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--glow-cyan); }
+    .pill.v::before { background: var(--accent-2); box-shadow: 0 0 8px var(--glow-violet); }
+
+    /* 個人照片 */
+    .photo-frame {
+      position: relative;
+      display: grid;
+      place-items: center;
+      flex: 1;
+      min-height: 280px;
+      margin: 10px 0 14px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255, 255, 255, .18);
+      background:
+        repeating-linear-gradient(-45deg, rgba(255,255,255,.025) 0 12px, transparent 12px 24px),
+        rgba(255, 255, 255, .02);
+      text-align: center;
+      padding: 20px;
+    }
+    .photo-mark {
+      display: grid;
+      place-items: center;
+      width: 104px;
+      height: 104px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(77,166,255,.18), rgba(167,139,250,.18));
+      border: 1px solid rgba(255,255,255,.15);
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: -.05em;
+      background-clip: padding-box;
+    }
+    .photo-mark span {
+      background: linear-gradient(92deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .photo-frame { transition: border-color .3s ease, background .3s ease; }
+    .photo-frame:hover { border-color: rgba(77, 166, 255, .45); }
+
+    /* 數據感統計 */
+    .stat-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 18px; }
+    .stat {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--tile-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+    .stat strong { display: block; font-size: 22px; line-height: 1.25; margin-bottom: 2px; font-variant-numeric: tabular-nums; }
+    .stat strong em { font-style: normal; color: var(--accent); }
+    .stat span { color: var(--dim); font-size: 13px; }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 13px;
+      border-radius: 12px;
+      border: 1px solid var(--tile-border);
+      background: rgba(255, 255, 255, .04);
+      font-size: 14px;
+      font-weight: 600;
+      color: #D4D7E0;
+      transition: border-color .2s ease, color .2s ease;
+    }
+    .tag:hover { border-color: rgba(77, 166, 255, .55); color: #FFF; }
+
+    .project-card {
+      position: relative;
+      padding: 18px 18px 18px 22px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--tile-border);
+      border-radius: 16px;
+      margin-top: 14px;
+      transition: border-color .2s ease;
+    }
+    .project-card::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 18px;
+      bottom: 18px;
+      width: 2px;
+      border-radius: 2px;
+      background: linear-gradient(var(--accent), var(--accent-2));
+      opacity: .8;
+    }
+    .project-card:hover { border-color: rgba(255, 255, 255, .2); transform: translateX(3px); }
+    .project-card { transition: border-color .2s ease, transform .25s ease; }
+    .project-card .meta {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--dim);
+    }
+    .project-card .meta b { color: var(--muted); font-weight: 600; }
+    .wide-note { margin-top: 12px; color: var(--dim); font-size: 14px; }
+
+    /* CTA */
+    .contact.tile {
+      background:
+        linear-gradient(120deg, rgba(77,166,255,.16), rgba(167,139,250,.14) 55%, rgba(56,224,200,.10)),
+        var(--tile);
+      overflow: hidden;
+    }
+    .contact::after {
+      content: "";
+      position: absolute;
+      top: -90px;
+      right: -60px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow-cyan), transparent 65%);
+      filter: blur(50px);
+      opacity: .6;
+      pointer-events: none;
+    }
+    .contact-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; position: relative; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: linear-gradient(92deg, var(--accent), var(--accent-2));
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(120, 140, 255, .35);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .button:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(120, 140, 255, .45); }
+    .button.secondary::before { content: "↓"; font-family: var(--font-mono); }
+    .button.ghost {
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--tile-border);
+      box-shadow: none;
+    }
+    .ghost:hover { border-color: rgba(255,255,255,.35); }
+
+    .footer {
+      padding: 26px 6px 0;
+      color: var(--dim);
+      font-size: 13px;
+      font-family: var(--font-mono);
+      text-align: center;
+      letter-spacing: .03em;
+    }
+    .footer .sep { margin: 0 8px; opacity: .4; }
+
+    /* 待確認提示條 */
+    .todo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-family: var(--font-mono);
+      color: var(--dim);
+      border: 1px dashed rgba(255, 255, 255, .22);
+      border-radius: 999px;
+      padding: 4px 11px;
+      margin-top: 12px;
+    }
+    .todo::before { content: "⌛"; font-size: 12px; }
+
+    @media (max-width: 900px) {
+      .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero, .about, .works, .experience, .contact { grid-column: span 2; }
+      .photo, .job, .skills, .traits, .interests { grid-column: span 1; }
+      .photo { grid-row: span 2; }
+    }
+    @media (max-width: 500px) {
+      .site-shell { width: min(calc(100% - 22px), var(--content-width)); padding-top: 22px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 18px; }
+      .bento { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+      .tile, .hero, .photo, .about, .job, .works, .skills, .experience, .traits, .interests, .contact { grid-column: 1; grid-row: auto; }
+      h1 { font-size: clamp(46px, 13vw, 62px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .tile { opacity: 1; translate: 0 0; animation: none !important; transition: none; transform: none !important; }
+      .tile:hover { --ty: 0px; }
+      .orb, .bg-grid, .brand-dot, .marquee-track, h1 .shine { animation: none; }
+      .project-card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><i></i></div>
+  <div class="bg-stage" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+  </div>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <main class="site-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-dot"></span>閔元泰 / PORTFOLIO</div>
+      <div class="topbar-note">MIN YUAN-TAI // KAINAN IM · DATA ANALYTICS · 2026</div>
+    </header>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="mq-chunk">
+          <b>DATA ANALYTICS</b><i>◆</i><b>BUSINESS INTELLIGENCE</b><i>◆</i><b>SQL</b><i>◆</i><b>PYTHON</b><i>◆</i><b>POWER&nbsp;BI</b><i>◆</i><b>EXCEL</b><i>◆</i><b>STATISTICS</b><i>◆</i><b>DATA&nbsp;VISUALIZATION</b><i>◆</i>
+        </div>
+        <div class="mq-chunk">
+          <b>DATA ANALYTICS</b><i>◆</i><b>BUSINESS INTELLIGENCE</b><i>◆</i><b>SQL</b><i>◆</i><b>PYTHON</b><i>◆</i><b>POWER&nbsp;BI</b><i>◆</i><b>EXCEL</b><i>◆</i><b>STATISTICS</b><i>◆</i><b>DATA&nbsp;VISUALIZATION</b><i>◆</i>
+        </div>
+      </div>
+    </div>
+
+    <section class="bento" aria-label="個人網站內容">
+      <!-- Hero -->
+      <article class="tile hero">
+        <div>
+          <p class="eyebrow">Aspiring Data Analyst</p>
+          <h1><span class="shine">閔元泰</span><br><span class="gradient-text">讓數據說話。</span></h1>
+          <p class="lead">開南資管應屆畢業生｜對資料分析與商業數據充滿興趣，期待從資料中發掘洞察、支持更好的決策。</p>
+        </div>
+        <div class="hero-footer">
+          <span class="pill">Data Analytics</span>
+          <span class="pill v">Business Intelligence</span>
+          <span class="pill">Class of <span id="year2">2026</span></span>
+        </div>
+      </article>
+
+      <!-- 個人照片 -->
+      <article class="tile photo">
+        <p class="eyebrow">01 — Profile</p>
+        <div class="photo-frame">
+          <div>
+            <div class="photo-mark"><span>閔</span></div>
+            <strong>閔元泰</strong>
+            <p class="placeholder">個人照片｜待確認，可替換</p>
+          </div>
+        </div>
+        <span class="todo">照片・待補</span>
+      </article>
+
+      <!-- 關於我 -->
+      <article class="tile about">
+        <p class="eyebrow">02 — About Me</p>
+        <h2>關於我</h2>
+        <p class="muted">我是閔元泰，就讀於開南大學資訊管理學系，目前是應屆畢業生。對資料分析、數據研究與商業決策有興趣，希望結合資訊管理知識，透過資料整理、分析與視覺化，協助理解問題並提出有依據的觀察。</p>
+        <div class="stat-row">
+          <div class="stat"><strong><em>3+</em> 類工具</strong><span>Excel / SQL / Python / BI（熟悉程度待確認）</span></div>
+          <div class="stat"><strong><em>視覺化</em> 思維</strong><span>將複雜數據轉為清楚的洞察</span></div>
+        </div>
+        <span class="todo">專業細節與故事・待補</span>
+      </article>
+
+      <!-- 想找的工作 -->
+      <article class="tile job">
+        <p class="eyebrow">03 — Career Goal</p>
+        <h2>想找的工作</h2>
+        <h3>資料分析相關職位</h3>
+        <p class="placeholder">目標職位與產業待確認</p>
+        <div class="tag-list">
+          <span class="tag">Data Analyst</span>
+          <span class="tag">BI Analyst</span>
+          <span class="tag">營運分析</span>
+          <span class="tag">行銷數據</span>
+        </div>
+      </article>
+
+      <!-- 作品 -->
+      <article class="tile works">
+        <p class="eyebrow">04 — Selected Projects</p>
+        <h2>作品</h2>
+        <div class="project-card">
+          <h3>作品／專題名稱｜待確認</h3>
+          <p class="placeholder">專案背景、使用資料、分析方法、使用工具與成果：待確認。</p>
+          <p class="meta"><b>Tech</b>｜工具待確認　<b>Role</b>｜負責內容待確認</p>
+        </div>
+        <div class="project-card">
+          <h3>第二項作品｜待確認</h3>
+          <p class="placeholder">可放置課堂專題、個人練習、資料視覺化或研究報告。</p>
+          <p class="meta"><b>Tech</b>｜工具待確認　<b>Role</b>｜負責內容待確認</p>
+        </div>
+      </article>
+
+      <!-- 技能 -->
+      <article class="tile skills">
+        <p class="eyebrow">05 — Skills</p>
+        <h2>技能</h2>
+        <p class="placeholder">實際熟悉程度待確認</p>
+        <div class="tag-list">
+          <span class="tag">Excel</span>
+          <span class="tag">SQL</span>
+          <span class="tag">Python</span>
+          <span class="tag">Power BI</span>
+          <span class="tag">統計分析</span>
+          <span class="tag">SPSS</span>
+        </div>
+      </article>
+
+      <!-- 經歷 -->
+      <article class="tile experience">
+        <p class="eyebrow">06 — Experience</p>
+        <h2>經歷</h2>
+        <div class="project-card">
+          <h3>學歷</h3>
+          <p class="muted"><strong>開南大學｜資訊管理學系</strong><br>應屆畢業生｜畢業年份：待確認</p>
+        </div>
+        <div class="project-card">
+          <h3>實習／工作／社團</h3>
+          <p class="placeholder">經歷、職責、時間與具體成果：待確認。</p>
+        </div>
+        <span class="todo">證照・語言・代表成果・待補</span>
+      </article>
+
+      <!-- 個人特質 -->
+      <article class="tile traits">
+        <p class="eyebrow">07 — Strengths</p>
+        <h2>個人特質</h2>
+        <p class="placeholder">待確認</p>
+        <div class="tag-list">
+          <span class="tag">分析思維</span>
+          <span class="tag">細心嚴謹</span>
+          <span class="tag">問題解決</span>
+        </div>
+      </article>
+
+      <!-- 興趣 -->
+      <article class="tile interests">
+        <p class="eyebrow">08 — Interests</p>
+        <h2>興趣</h2>
+        <p class="placeholder">待確認</p>
+        <p class="wide-note">可補充個人興趣、關注的數據議題或持續學習的領域。</p>
+      </article>
+
+      <!-- 聯絡我 -->
+      <article class="tile contact">
+        <p class="eyebrow">09 — Let's Connect</p>
+        <h2>一起聊聊數據與機會。</h2>
+        <p class="lead">正在尋找資料分析相關的新鮮人機會。歡迎聯絡我，交流職涯與合作可能。</p>
+        <div class="contact-row">
+          <a class="button" href="mailto:待確認@example.com" aria-label="寄送電子郵件">聯絡我 ✦</a>
+          <a class="button secondary" href="#" aria-label="下載履歷（連結待補）" onclick="alert('履歷下載連結待確認，請先補上履歷檔案。'); return false;">履歷下載｜待補</a>
+          <a class="button ghost" href="#" aria-label="LinkedIn（待補）" onclick="alert('LinkedIn 連結待確認。'); return false;">LinkedIn</a>
+          <a class="button ghost" href="#" aria-label="GitHub（待補）" onclick="alert('GitHub 連結待確認。'); return false;">GitHub</a>
+        </div>
+        <p class="wide-note">Email／LinkedIn／GitHub：待確認</p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      © <span id="year">2026</span> 閔元泰<span class="sep">//</span>EXPLORE MORE WITH DATA
+    </footer>
+  </main>
+
+  <noscript><style>.tile { opacity: 1; translate: 0 0; }</style></noscript>
+
+  <script>
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = matchMedia('(hover: hover)').matches;
+
+    // 年份
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('year2').textContent = new Date().getFullYear();
+
+    // 頂部閱讀進度
+    const progressBar = document.querySelector('.scroll-progress i');
+    const updateProgress = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight || 1;
+      progressBar.style.transform = 'scaleX(' + Math.min(h.scrollTop / max, 1) + ')';
+    };
+    addEventListener('scroll', updateProgress, { passive: true });
+    addEventListener('resize', updateProgress);
+    updateProgress();
+
+    // 捲動進場：進入視窗才交錯浮現
+    const tiles = [...document.querySelectorAll('.tile')];
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      tiles.forEach(t => t.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          el.style.animationDelay = ((+el.dataset.i) % 6) * 70 + 'ms';
+          el.classList.add('in');
+          io.unobserve(el);
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      tiles.forEach((t, i) => { t.dataset.i = i; io.observe(t); });
+    }
+
+    // 滑鼠追蹤：卡片內高光 + 3D 微傾斜
+    tiles.forEach(tile => {
+      tile.addEventListener('mousemove', e => {
+        const r = tile.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        tile.style.setProperty('--mx', x + 'px');
+        tile.style.setProperty('--my', y + 'px');
+        if (canHover && !reduceMotion && r.width > 0) {
+          const ry = ((x / r.width) - .5) * 5;
+          const rx = ((y / r.height) - .5) * -5;
+          tile.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+          tile.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+        }
+      });
+      tile.addEventListener('mouseleave', () => {
+        tile.style.setProperty('--rx', '0deg');
+        tile.style.setProperty('--ry', '0deg');
+      });
+    });
+  </script>
+</body>
+</html>
